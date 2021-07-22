@@ -1,0 +1,44 @@
+name: Build Golang Programming Gitbook
+
+on:
+  push:
+    branches: [master]
+    paths-ignore: # 以下文件的变更不触发部署
+      - README.md
+  workflow_dispatch:
+
+env:
+  GIT_USER: 戛戛Happy
+  GIT_EMAIL: sleepmoon.jia@gmail.com
+  NODE_VERSION: 10.5
+
+jobs:
+  build:
+    name: Build Github Page on node ${{ env.NODE_VERSION }} and Ubuntu-latest
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v2
+
+      - name: Use Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Install Gitbook
+        run: |
+          npm install gitbook-cli -g
+
+      - name: Build Gitbook
+        run: |
+          gitbook build
+
+      - name: Deploy Github Page
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./_book
+          user_name: ${{ env.GIT_USER }}
+          user_email: ${{ env.GIT_EMAIL }}
