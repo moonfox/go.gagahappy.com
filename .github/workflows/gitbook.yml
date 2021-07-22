@@ -3,8 +3,8 @@ name: Build Golang Programming Gitbook
 on:
   push:
     branches: [master]
-    # paths-ignore: # 以下文件的变更不触发部署
-    #   - README.md
+    paths-ignore: # 以下文件的变更不触发部署
+      - README.md
   workflow_dispatch:
 
 env:
